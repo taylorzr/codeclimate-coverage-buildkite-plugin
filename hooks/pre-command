@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -eu
+
+# TODO: Config version
+# TODO: Find a way to move this to a common place
+function install_test_reporter() {
+  if [ -f ./cc-test-reporter ]; then
+    echo "--- :codeclimate: Using existing Codeclimate reporter"
+  else
+    echo "--- :codeclimate: Installing Codeclimate reporter"
+    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    chmod +x ./cc-test-reporter
+  fi
+}
+
+# source "$(dirname $0)/common"
+
+install_test_reporter
+
+echo "--- :codeclimate: Codeclimate Before-Build"
+./cc-test-reporter before-build

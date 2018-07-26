@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -eu
+
+if ! [ -v TEST_EXIT_CODE ]; then
+  TEST_EXIT_CODE="$?"
+  echo "+++ Warning: TEST_EXIT_CODE not set, assuming last exit code was the result of running tests" 
+fi
+
+# TODO: Config version
+# TODO: Find a way to move this to a common place
+function install_test_reporter() {
+  if [ -f ./cc-test-reporter ]; then
+    echo "--- :codeclimate: Using existing Codeclimate reporter"
+  else
+    echo "--- :codeclimate: Installing Codeclimate reporter"
+    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    chmod +x ./cc-test-reporter
+  fi
+}
+
+# source "$(dirname $0)/common"
+
+install_test_reporter
+
+if [ -v BUILDKITE_CODECLIMATE_COVERAGE_UPLOAD ]; then
+  echo '+++ :codeclimate: Download coverage artifacts'
+  mkdir coverage
+  # TODO: Config path filename
+  buildkite-agent artifact download coverage/* coverage/
+
+  echo '+++ :codeclimate: Codeclimate upload'
+  ./cc-test-reporter sum-coverage --output coverage/codeclimate_coverage_aggregate.json coverage/codeclimate_*.json
+  ./cc-test-reporter upload-coverage --input coverage/codeclimate_coverage_aggregate.json
+else
+  if [ -v BUILDKITE_PARALLEL_JOB ]; then
+    echo '--- :codeclimate: Formatting codeclimate coverage report'
+    ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json"
+  else
+    echo '--- :codeclimate: Codeclimate After-Build'
+    ls -la
+    echo "Test exit code: $TEST_EXIT_CODE"
+    # Get unix timestamp of commit time
+    # TODO: Is head the commit that was committed?!?!??!
+    # export COMMITTED_AT=$(git show -s --format='%ct' HEAD)
+    ./cc-test-reporter after-build --exit-code "$TEST_EXIT_CODE" --debug --prefix /workdir
+  fi
+fi

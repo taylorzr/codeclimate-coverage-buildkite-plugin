@@ -1,0 +1,7 @@
+name: Codeclimate Coverage
+description: Submits coverage reports to Codeclimate
+author: https://github.com/avantcredit
+requirements: []
+configuration:
+  properties:
+    upload: boolean
