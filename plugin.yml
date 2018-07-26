@@ -5,3 +5,4 @@ requirements: []
 configuration:
   properties:
     upload: boolean
+    prefix: string

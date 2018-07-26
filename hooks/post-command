@@ -18,7 +18,7 @@ function install_test_reporter() {
 
 install_test_reporter
 
-if [ -v BUILDKITE_CODECLIMATE_COVERAGE_UPLOAD ]; then
+if [ -v BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_UPLOAD ]; then
   echo '+++ :codeclimate: Download coverage artifacts'
   mkdir coverage
   # TODO: Config path filename
@@ -30,11 +30,12 @@ if [ -v BUILDKITE_CODECLIMATE_COVERAGE_UPLOAD ]; then
 else
   if [ -v BUILDKITE_PARALLEL_JOB ]; then
     echo '--- :codeclimate: Formatting codeclimate coverage report'
-    ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json"
+    env
+    prefix="${BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_PREFIX:-/workdir}"
+    echo "Prefix: $prefix"
+    ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json" --prefix $prefix
   else
     echo '--- :codeclimate: Codeclimate After-Build'
-    # TODO: Config prefix
-    # Use env var instead of hard coded `--prefix /workdir` ?!?
-    ./cc-test-reporter after-build --exit-code $BUILDKITE_COMMAND_EXIT_STATUS --prefix /workdir
+    ./cc-test-reporter after-build --exit-code $BUILDKITE_COMMAND_EXIT_STATUS --prefix "${BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_PREFIX:-/workdir}"
   fi
 fi
