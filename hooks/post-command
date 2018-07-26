@@ -2,11 +2,6 @@
 
 set -eu
 
-if ! [ -v TEST_EXIT_CODE ]; then
-  TEST_EXIT_CODE="$?"
-  echo "+++ Warning: TEST_EXIT_CODE not set, assuming last exit code was the result of running tests" 
-fi
-
 # TODO: Config version
 # TODO: Find a way to move this to a common place
 function install_test_reporter() {
@@ -38,11 +33,8 @@ else
     ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json"
   else
     echo '--- :codeclimate: Codeclimate After-Build'
-    ls -la
-    echo "Test exit code: $TEST_EXIT_CODE"
-    # Get unix timestamp of commit time
-    # TODO: Is head the commit that was committed?!?!??!
-    # export COMMITTED_AT=$(git show -s --format='%ct' HEAD)
-    ./cc-test-reporter after-build --exit-code "$TEST_EXIT_CODE" --debug --prefix /workdir
+    # TODO: Config prefix
+    # Use env var instead of hard coded `--prefix /workdir` ?!?
+    ./cc-test-reporter after-build --exit-code $BUILDKITE_COMMAND_EXIT_STATUS --prefix /workdir
   fi
 fi
