@@ -7,7 +7,7 @@ load "$BATS_PATH/load.bash"
 
   run $PWD/hooks/pre-command
 
-  assert_output --partial "cc-test-reporter called with before-build"
+  assert_output --partial "fake-cc-test-reporter called with before-build"
   assert_success
 
   rm ./cc-test-reporter
