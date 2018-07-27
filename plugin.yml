@@ -4,5 +4,6 @@ author: https://github.com/avantcredit
 requirements: []
 configuration:
   properties:
-    upload: boolean
+    # TODO: Consider renaming to something a bit more descriptive like sum_and_upload
+    sum_and_upload: boolean
     prefix: string

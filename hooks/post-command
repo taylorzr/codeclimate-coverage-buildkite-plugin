@@ -18,9 +18,9 @@ function install_test_reporter() {
 
 install_test_reporter
 
-if [ -v BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_UPLOAD ]; then
+if [ -v BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_SUM_AND_UPLOAD ]; then
   echo '+++ :codeclimate: Download coverage artifacts'
-  mkdir coverage
+  mkdir -p coverage
   # TODO: Config path filename
   buildkite-agent artifact download coverage/* coverage/
 
@@ -28,11 +28,13 @@ if [ -v BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_UPLOAD ]; then
   ./cc-test-reporter sum-coverage --output coverage/codeclimate_coverage_aggregate.json coverage/codeclimate_*.json
   ./cc-test-reporter upload-coverage --input coverage/codeclimate_coverage_aggregate.json
 else
+  prefix="${BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_PREFIX:-/workdir}"
+
   if [ -v BUILDKITE_PARALLEL_JOB ]; then
     echo '--- :codeclimate: Formatting codeclimate coverage report'
-    ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json" --prefix $prefix
+    ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json" --prefix "$prefix"
   else
     echo '--- :codeclimate: Codeclimate After-Build'
-    ./cc-test-reporter after-build --exit-code $BUILDKITE_COMMAND_EXIT_STATUS --prefix "${BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_PREFIX:-/workdir}" --debug
+    ./cc-test-reporter after-build --exit-code $BUILDKITE_COMMAND_EXIT_STATUS --prefix "$prefix" --debug
   fi
 fi

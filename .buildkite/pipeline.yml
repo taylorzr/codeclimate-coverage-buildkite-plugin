@@ -1,4 +1,5 @@
 steps:
-  - plugins:
+  - name: ':bat:s Test'
+    plugins:
       docker-compose#v2.5.1:
         run: tests
