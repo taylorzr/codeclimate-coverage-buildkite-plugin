@@ -30,12 +30,9 @@ if [ -v BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_UPLOAD ]; then
 else
   if [ -v BUILDKITE_PARALLEL_JOB ]; then
     echo '--- :codeclimate: Formatting codeclimate coverage report'
-    env
-    prefix="${BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_PREFIX:-/workdir}"
-    echo "Prefix: $prefix"
     ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json" --prefix $prefix
   else
     echo '--- :codeclimate: Codeclimate After-Build'
-    ./cc-test-reporter after-build --exit-code $BUILDKITE_COMMAND_EXIT_STATUS --prefix "${BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_PREFIX:-/workdir}"
+    ./cc-test-reporter after-build --exit-code $BUILDKITE_COMMAND_EXIT_STATUS --prefix "${BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_PREFIX:-/workdir}" --debug
   fi
 fi

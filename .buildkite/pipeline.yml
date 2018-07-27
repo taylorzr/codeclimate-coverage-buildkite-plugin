@@ -1,0 +1,4 @@
+steps:
+  - plugins:
+      taylorzr/codeclimate-coverage#master:
+        run: tests

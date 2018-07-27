@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# This exists to mock the real cc-test-reporter. Notice this file is not executable, this is
+# intentional because the plugin makes it executable
+
+echo cc-test-reporter called with "$@"
