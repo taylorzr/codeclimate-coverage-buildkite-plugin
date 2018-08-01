@@ -48,10 +48,8 @@
       codeclimate-coverage: ~
 
   - name: ':codeclimate: Upload'
-    # Can I have a step with no command?!?
-    # Or do I need something like
-    # command: 'Echo hi'
+    command: 'echo +++ :codeclimate:'
     plugins:
       taylorzr/codeclimate-coverage#master: ~
-        upload: true
+        sum_and_upload: true
 ```
