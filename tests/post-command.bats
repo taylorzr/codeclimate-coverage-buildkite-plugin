@@ -10,6 +10,22 @@ load "$BATS_PATH/load.bash"
 
   run $PWD/hooks/post-command
 
+  assert_output --partial 'fake-cc-test-reporter called with after-build --exit-code 42 --prefix /workdir'
+  assert_success
+
+  rm ./cc-test-reporter
+  rm -rf coverage/
+}
+
+@test "post-command uses debug flag when debug=true" {
+  export BUILDKITE_COMMAND_EXIT_STATUS=42
+  export BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_DEBUG=true
+
+  cp tests/fake-cc-test-reporter cc-test-reporter
+  chmod +x cc-test-reporter
+
+  run $PWD/hooks/post-command
+
   assert_output --partial 'fake-cc-test-reporter called with after-build --exit-code 42 --prefix /workdir --debug'
   assert_success
 

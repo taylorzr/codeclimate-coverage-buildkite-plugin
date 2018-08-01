@@ -6,4 +6,4 @@ DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 source "$DIR/../lib/shared.bash"
 
 echo "--- :codeclimate: Codeclimate Before-Build"
-./cc-test-reporter before-build
+./cc-test-reporter before-build $debug

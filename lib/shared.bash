@@ -12,3 +12,9 @@ function install_test_reporter() {
 }
 
 install_test_reporter
+
+if [ -v BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_DEBUG ]; then
+  debug='--debug'
+else
+  debug=''
+fi

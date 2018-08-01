@@ -12,16 +12,16 @@ if [ -v BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_SUM_AND_UPLOAD ]; then
   buildkite-agent artifact download coverage/* coverage/
 
   echo '+++ :codeclimate: Codeclimate upload'
-  ./cc-test-reporter sum-coverage --output coverage/codeclimate_coverage_aggregate.json coverage/codeclimate_*.json
-  ./cc-test-reporter upload-coverage --input coverage/codeclimate_coverage_aggregate.json
+  ./cc-test-reporter sum-coverage --output coverage/codeclimate_coverage_aggregate.json coverage/codeclimate_*.json $debug
+  ./cc-test-reporter upload-coverage --input coverage/codeclimate_coverage_aggregate.json $debug
 else
   prefix="${BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_PREFIX:-/workdir}"
 
   if [ -v BUILDKITE_PARALLEL_JOB ]; then
     echo '--- :codeclimate: Formatting codeclimate coverage report'
-    ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json" --prefix "$prefix"
+    ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json" --prefix "$prefix" $debug
   else
     echo '--- :codeclimate: Codeclimate After-Build'
-    ./cc-test-reporter after-build --exit-code "$BUILDKITE_COMMAND_EXIT_STATUS" --prefix "$prefix" --debug
+    ./cc-test-reporter after-build --exit-code "$BUILDKITE_COMMAND_EXIT_STATUS" --prefix "$prefix" $debug
   fi
 fi
