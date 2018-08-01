@@ -4,5 +4,6 @@ author: https://github.com/avantcredit
 requirements: []
 configuration:
   properties:
-    upload: boolean
+    sum_and_upload: boolean
     prefix: string
+    test_reporter_url: string
