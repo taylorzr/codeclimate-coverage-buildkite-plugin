@@ -55,11 +55,21 @@ You're pipeline should look something like this:
           - BUILDKITE_BRANCH
           - BUILDKITE_COMMIT
           - CC_TEST_REPORTER_ID
-      codeclimate-coverage: ~
+      taylorzr/codeclimate-coverage#v0.1.0:
+        prefix: '/usr/src/app'
 
   - name: ':codeclimate: Upload'
     command: 'echo +++ :codeclimate:'
     plugins:
       taylorzr/codeclimate-coverage#v0.1.0: ~
         sum_and_upload: true
+        prefix: '/usr/src/app'
 ```
+
+## TODO:
+- document, explain, and test prefix config
+- document and test reporter url config
+- document debug config
+- document caveats
+  - must mount local dir when using docker-compose
+  - must pass through env variables

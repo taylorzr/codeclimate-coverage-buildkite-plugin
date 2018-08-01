@@ -8,7 +8,6 @@ source "$DIR/../lib/shared.bash"
 if [ -v BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_SUM_AND_UPLOAD ]; then
   echo '+++ :codeclimate: Download coverage artifacts'
   mkdir -p coverage
-  # TODO: Config path filename
   buildkite-agent artifact download coverage/* coverage/
 
   echo '+++ :codeclimate: Codeclimate upload'
