@@ -1,22 +1,9 @@
 #!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
-# TODO: Config version
-# TODO: Find a way to move this to a common place
-function install_test_reporter() {
-  if [ -f ./cc-test-reporter ]; then
-    echo "--- :codeclimate: Using existing Codeclimate reporter"
-  else
-    echo "--- :codeclimate: Installing Codeclimate reporter"
-    curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-    chmod +x ./cc-test-reporter
-  fi
-}
-
-# source "$(dirname $0)/common"
-
-install_test_reporter
+DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+source "$DIR/../lib/shared.bash"
 
 if [ -v BUILDKITE_PLUGIN_CODECLIMATE_COVERAGE_SUM_AND_UPLOAD ]; then
   echo '+++ :codeclimate: Download coverage artifacts'
@@ -35,6 +22,6 @@ else
     ./cc-test-reporter format-coverage --output "coverage/codeclimate_${BUILDKITE_PARALLEL_JOB}.json" --prefix "$prefix"
   else
     echo '--- :codeclimate: Codeclimate After-Build'
-    ./cc-test-reporter after-build --exit-code $BUILDKITE_COMMAND_EXIT_STATUS --prefix "$prefix" --debug
+    ./cc-test-reporter after-build --exit-code "$BUILDKITE_COMMAND_EXIT_STATUS" --prefix "$prefix" --debug
   fi
 fi

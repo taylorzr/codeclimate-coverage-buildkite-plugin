@@ -6,3 +6,4 @@ configuration:
   properties:
     sum_and_upload: boolean
     prefix: string
+    test_reporter_url: string
