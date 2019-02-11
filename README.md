@@ -22,14 +22,14 @@ You're test step should look something like this:
 - name: 'Test'
   command: '.buildkite/test'
   plugins:
-    docker-compose#v2.4.1:
-      run: web
-      env:
-        # Used by code coverage
-        - BUILDKITE_BRANCH
-        - BUILDKITE_COMMIT
-        - CC_TEST_REPORTER_ID
-    taylorzr/codeclimate-coverage#v0.1.0: ~
+    - docker-compose#v2.4.1:
+        run: web
+        env:
+          # Used by code coverage
+          - BUILDKITE_BRANCH
+          - BUILDKITE_COMMIT
+          - CC_TEST_REPORTER_ID
+    - taylorzr/codeclimate-coverage#v0.1.0: ~
 
 ```
 
@@ -48,22 +48,22 @@ You're pipeline should look something like this:
       - "coverage/codeclimate_coverage_*.json"
     parallelism: 2
     plugins:
-      docker-compose#v2.4.1:
-        run: web
-        env:
-          # Used by code coverage
-          - BUILDKITE_BRANCH
-          - BUILDKITE_COMMIT
-          - CC_TEST_REPORTER_ID
-      taylorzr/codeclimate-coverage#v0.1.0:
-        prefix: '/usr/src/app'
+      - docker-compose#v2.4.1:
+          run: web
+          env:
+            # Used by code coverage
+            - BUILDKITE_BRANCH
+            - BUILDKITE_COMMIT
+            - CC_TEST_REPORTER_ID
+      - taylorzr/codeclimate-coverage#v0.1.0:
+          prefix: '/usr/src/app'
 
   - name: ':codeclimate: Upload'
     command: 'echo +++ :codeclimate:'
     plugins:
-      taylorzr/codeclimate-coverage#v0.1.0: ~
-        sum_and_upload: true
-        prefix: '/usr/src/app'
+      - taylorzr/codeclimate-coverage#v0.1.0: ~
+          sum_and_upload: true
+          prefix: '/usr/src/app'
 ```
 
 ## TODO:
